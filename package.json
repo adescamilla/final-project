@@ -1,0 +1,31 @@
+{
+  "name": "final-project",
+  "version": "1.0.0",
+  "description": "Final Project",
+  "main": "src/index.js",
+  "scripts": {
+    "build": "babel ./src --out-dir ./build",
+    "start": "node ./build/index.js",
+    "dev": "nodemon --exec npx babel-node src/index.js",
+    "lint": "eslint ."
+  },
+  "author": "Andrew Escamilla",
+  "license": "ISC",
+  "dependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.23.4",
+    "@babel/core": "^7.23.5",
+    "@babel/node": "^7.22.19",
+    "@babel/plugin-transform-runtime": "^7.23.4",
+    "@babel/preset-env": "^7.23.5",
+    "@babel/runtime": "^7.23.5",
+    "eslint": "^8.55.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "prettier": "^3.1.0"
+  }
+}
