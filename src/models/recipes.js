@@ -1,36 +1,33 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable prettier/prettier */
-import { v4 as uuid } from 'uuid'
+import db from '../utils/db'
 
-const recipes = []
-
-export const getRecipes = () => recipes
-
-export const getRecipe = (id) => {
-  return recipes.find((recipe) => recipe.id === id)
+export const getRecipes = async (skip, take) => {
+  const count = await db.recipe.count()
+  const recipes = await db.recipe.findMany({
+    skip,
+    take,
+  })
+  return { count, recipes }
 }
 
-export const createRecipe = (recipe) => {
-  const id = uuid()
-  recipes.push({ id, ...recipe })
-  return getRecipe(id)
-}
+export const getRecipe = async (id) =>
+  db.recipe.findUnique({ where: { recipeId: id } })
 
-export const updateRecipe = (id, recipe) => {
-  const databaseRecipe = getRecipe(id)
-  if (databaseRecipe) {
-    const recipeIndex = recipes.findIndex((r) => r.id === id)
-    recipes[recipeIndex] = { id, ...recipe }
+export const addRecipe = async (recipeData) =>
+  db.recipe.create({ data: { ...recipeData } })
+
+export const updateRecipe = async (id, recipeData) => {
+  const recipe = await getRecipe(id)
+  if (recipe) {
+    return db.recipe.update({
+      where: { recipeID: id },
+      data: { ...recipe, ...recipeData, updatedAt: new Date() },
+    })
   }
-  return getRecipe(id)
+  return null
 }
 
-export const deleteRecipe = (id) => {
-  const recipeIndex = recipes.findIndex((r) => r.id === id)
-  if (recipeIndex !== -1) {
-    recipes.splice(recipeIndex, 1)
-    return true
-  }
-  return false
-}
+export const deleteRecipe = async (id) =>
+  db.recipe.delete({ where: { recipeID: id } })

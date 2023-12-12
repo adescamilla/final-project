@@ -2,50 +2,58 @@
 import { Router } from 'express'
 
 import {
-  getRecipes,
   getRecipe,
-  createRecipe,
+  getRecipes,
+  addRecipe,
   updateRecipe,
   deleteRecipe,
 } from '../../models/recipes'
 
 const router = Router()
 
-router.get('/', (req, res) => {
-  const recipes = getRecipes()
+router.get('/', async (req, res) => {
+  const size = Number(req.query.size) || 10
+  const page = Number(req.query.page) || 1
+  const skip = size * (page - 1)
+  const take = size
+  const { count, recipes } = await getRecipes(skip, take)
+  res.set({
+    'X-Total-Count': count,
+    'X-Total-Pages': Math.ceil(count / size),
+  })
   res.send(recipes)
 })
 
-router.get('/:id', (req, res) => {
-  const recipe = getRecipe(req.params.id)
+router.get('/:id', async (req, res) => {
+  const recipe = await getRecipe(req.params.id)
   if (recipe) {
     res.send(recipe)
+  } else {
+    res.status(404).send({ msg: 'Recipe not found' })
   }
-  res.status(404).send({ msg: 'Recipe not found '})
 })
 
-router.post('/', (req, res) => {
-  const newRecipe = createRecipe(req.body)
-  if (newRecipe) {
-    res.status(201).send(newRecipe)
-  }
-  res.status(400).send({ msg: 'Bad request' })
+router.post('/', async (req, res) => {
+  const recipe = await addRecipe(req.body)
+  res.send(recipe)
 })
 
-router.put('/:id', (req, res) => {
-  const updatedRecipe = updateRecipe(req.params.id, req.body)
-  if (updatedRecipe) {
-    res.send(updatedRecipe)
+router.put('/:id', async (req, res) => {
+  const recipe = await updateRecipe(req.params.id, req.body)
+  if (recipe) {
+    res.send(recipe)
+  } else {
+    res.status(404).send({ msg: 'Recipe not found' })
   }
-  res.status(404).send({ msg: 'Recipe not found' })
 })
 
-router.delete('/:id', (req, res) => {
-  const deleted = deleteRecipe(req.params.id)
-  if (deleted) {
-    res.send({ msg: `Recipe ${req.params.id} Deleted` })
+router.delete('/:id', async (req, res) => {
+  const recipe = await deleteRecipe(req.params.id)
+  if (recipe) {
+    res.send(recipe)
+  } else {
+    res.status(404).send({ msg: 'Recipe not found' })
   }
-  res.status(404).send({ msg: 'Recipe not found' })
 })
 
 export default router
