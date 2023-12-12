@@ -12,6 +12,7 @@ datasource db {
 
 model Recipe {
   name         String   @unique
+  recipeID     String   @id @default(uuid())
   author       String
   cookTime     String
   foodType     String

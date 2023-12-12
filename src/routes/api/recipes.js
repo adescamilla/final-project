@@ -16,8 +16,8 @@ router.get('/', (req, res) => {
   res.send(recipes)
 })
 
-router.get('/:author', (req, res) => {
-  const recipe = getRecipe(req.params.author)
+router.get('/:id', (req, res) => {
+  const recipe = getRecipe(req.params.id)
   if (recipe) {
     res.send(recipe)
   }
@@ -32,18 +32,18 @@ router.post('/', (req, res) => {
   res.status(400).send({ msg: 'Bad request' })
 })
 
-router.put('/:author', (req, res) => {
-  const updatedRecipe = updateRecipe(req.params.author, req.body)
+router.put('/:id', (req, res) => {
+  const updatedRecipe = updateRecipe(req.params.id, req.body)
   if (updatedRecipe) {
     res.send(updatedRecipe)
   }
   res.status(404).send({ msg: 'Recipe not found' })
 })
 
-router.delete('/:author', (req, res) => {
-  const deleted = deleteRecipe(req.params.author)
+router.delete('/:id', (req, res) => {
+  const deleted = deleteRecipe(req.params.id)
   if (deleted) {
-    res.send({ msg: `Recipe ${req.params.author} Deleted` })
+    res.send({ msg: `Recipe ${req.params.id} Deleted` })
   }
   res.status(404).send({ msg: 'Recipe not found' })
 })
