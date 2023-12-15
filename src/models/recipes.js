@@ -13,7 +13,7 @@ export const getRecipes = async (skip, take) => {
 }
 
 export const getRecipe = async (id) =>
-  db.recipe.findUnique({ where: { recipeId: id } })
+  db.recipe.findUnique({ where: { recipeID: id } })
 
 export const addRecipe = async (recipeData) =>
   db.recipe.create({ data: { ...recipeData } })
